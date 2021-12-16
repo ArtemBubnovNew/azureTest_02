@@ -6,28 +6,61 @@ trigger:
      include:
      - force-app/*
 
+pr:
+  branches:
+      include:
+      - '*'
+  paths:
+     include:
+     - force-app
+
 stages:
-  - stage: stage_test_01
+  - stage: build
     jobs:
       - job:
         pool:
+          ##vmImage: ubuntu-latest
+          # name: default
           name: Azure Pipelines
           vmImage: ubuntu-latest
-
         steps:
+          - task: UseNode@1
+          - task: Npm@1
+            inputs:
+              command: custom
+              customCommand: install sfdx-cli --global
+
           - bash:
-              echo "Main pipeline"
-            displayName: "Main pipeline"
+              echo "build steps to be done (Node, cli and so on. Will be used to set the project)"
+            displayName: "build"
              
 
-  - stage: stage_test_02
+  - stage: deployDev
+    displayName: "Depoy dev"
     jobs:
-      - job:
+      - deployment: 
         pool:
-          name: Azure Pipelines
-          vmImage: ubuntu-latest
+          vmImage: 'ubuntu-latest'
+        environment: 'Dev'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+              - bash: 
+                  touch access.key
+                displayName: "Temp file for auth url file creation  __ org 1"
 
-        steps:
-          - bash:
-              echo "Main pipeline"
-            displayName: "child pipeline"
+              - bash:    
+                  echo $SF_URL > access.key
+                env:
+                  SF_URL: $(SalesforceOrgAuthUrl)
+                displayName: "Write url to the temp file  __ org 1"
+
+
+              - bash: 
+                  sfdx force:auth:sfdxurl:store -f "access.key" -a salesforce.org
+                displayName: "Connect to the Salesforce  __ org 1"
+
+              - bash: 
+                  sfdx force:org:display -u salesforce.org
+                displayName: "Salesforce org connection doublecheck  __ org 1"
