@@ -70,3 +70,77 @@ stages:
               - bash: 
                   sfdx force:org:display -u salesforce.org
                 displayName: "Salesforce org connection doublecheck  __ org 1"
+
+  - stage: deployUAT
+    displayName: "Depoy dev"
+    jobs:
+      - deployment: 
+        pool:
+          vmImage: 'ubuntu-latest'
+        environment: 'Dev'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+              
+              - task: Npm@1
+                inputs:
+                    command: custom
+                    customCommand: install sfdx-cli --global
+
+              - bash: 
+                  touch access.key
+                displayName: "Temp file for auth url file creation  __ org 1"
+
+              - bash:    
+                  echo $SF_URL > access.key
+                env:
+                  SF_URL: $(SalesforceOrgAuthUrl)
+                displayName: "Write url to the temp file  __ org 1"
+
+
+              - bash: 
+                  sfdx force:auth:sfdxurl:store -f "access.key" -a salesforce.org
+                displayName: "Connect to the Salesforce  __ org 1"
+
+              - bash: 
+                  sfdx force:org:display -u salesforce.org
+                displayName: "Salesforce org connection doublecheck  __ org 1"
+
+
+
+  - stage: deployPROD
+    displayName: "Depoy dev"
+    jobs:
+      - deployment: 
+        pool:
+          vmImage: 'ubuntu-latest'
+        environment: 'Dev'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+              
+              - task: Npm@1
+                inputs:
+                    command: custom
+                    customCommand: install sfdx-cli --global
+
+              - bash: 
+                  touch access.key
+                displayName: "Temp file for auth url file creation  __ org 1"
+
+              - bash:    
+                  echo $SF_URL > access.key
+                env:
+                  SF_URL: $(SalesforceOrgAuthUrl)
+                displayName: "Write url to the temp file  __ org 1"
+
+
+              - bash: 
+                  sfdx force:auth:sfdxurl:store -f "access.key" -a salesforce.org
+                displayName: "Connect to the Salesforce  __ org 1"
+
+              - bash: 
+                  sfdx force:org:display -u salesforce.org
+                displayName: "Salesforce org connection doublecheck  __ org 1"
