@@ -13,3 +13,4 @@ pool:
 steps:
   - bash:
       echo "Main pipeline"
+    displayName: "Main pipeline"
