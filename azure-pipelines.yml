@@ -46,6 +46,12 @@ stages:
           runOnce:
             deploy:
               steps:
+              
+              - task: Npm@1
+                inputs:
+                    command: custom
+                    customCommand: install sfdx-cli --global
+
               - bash: 
                   touch access.key
                 displayName: "Temp file for auth url file creation  __ org 1"
