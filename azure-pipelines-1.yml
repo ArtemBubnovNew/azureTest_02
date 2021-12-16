@@ -1,0 +1,16 @@
+trigger:
+  branches:
+      include:
+      - '*'
+  paths:
+     include:
+     - force-app/*
+
+pool:
+  name: Azure Pipelines
+  vmImage: ubuntu-latest
+
+steps:
+  - bash:
+      echo "Child pipeline"
+    displayName: "Child pipeline"
