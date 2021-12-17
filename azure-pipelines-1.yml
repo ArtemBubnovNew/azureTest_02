@@ -128,7 +128,7 @@ stages:
                     workingDirectory: $(Build.SourcesDirectory)
                 - task: CmdLine@2
                   inputs:
-                    script: cd $(Build.SourcesDirectory)\azureTest_02
+                    script: cd azureTest_02
                     # /vsts/work/1/azureTest_02
                 - task: CmdLine@2
                   inputs:
