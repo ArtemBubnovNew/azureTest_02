@@ -47,6 +47,9 @@ stages:
               sfdx force:org:display -u salesforce.org
             displayName: "Salesforce org connection doublecheck  __ org 1"
 
+          - bash:
+              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce.org -c
+            displayName: "Salesforce test without deploy"
 ##-------------------------------------------------------------------------------------------------------------------------------
 ##-------------------------------------------------------------------------------------------------------------------------------
 ##-------------------------------------------------------------------------------------------------------------------------------
@@ -87,3 +90,7 @@ stages:
               - bash: 
                   sfdx force:org:display -u salesforce_02.org
                 displayName: "Salesforce org connection doublecheck  __ org 2"
+                
+              - bash:
+                  sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce.org -c
+                displayName: "Deploy to Salesforce org XXX"
