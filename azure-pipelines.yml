@@ -67,7 +67,6 @@ stages:
             inputs:
               command: custom
               customCommand: install sfdx-cli --global
-      
       - deployment: 
         pool:
           name: Azure Pipelines
