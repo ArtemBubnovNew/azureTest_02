@@ -127,7 +127,8 @@ stages:
                     script: dir
                 - task: CmdLine@2
                   inputs:
-                    script: cd azureTest_02
+                    script: cd 
+                    workingDirectory: azureTest_02
                 - task: CmdLine@2
                   inputs:
                     script: dir
