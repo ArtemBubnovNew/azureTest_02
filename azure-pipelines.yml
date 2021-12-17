@@ -35,8 +35,8 @@ stages:
             displayName: "build"
              
 
-  - stage: deployDev
-    displayName: "Deploy dev"
+  - stage: sourceCodeValidation
+    displayName: "Source Code Validation"
     jobs:
       - deployment: 
         pool:
@@ -71,8 +71,8 @@ stages:
                   sfdx force:org:display -u salesforce.org
                 displayName: "Salesforce org connection doublecheck  __ org 1"
 
-  - stage: deployUAT
-    displayName: "Deploy uat"
+  - stage: deploymentToBuildOrg
+    displayName: "Deployment to Build org"
     jobs:
       - deployment: 
         pool:
@@ -109,8 +109,8 @@ stages:
 
 
 
-  - stage: deployPROD
-    displayName: "Deploy prod"
+  - stage: deploymentToQAOrg
+    displayName: "Deployment to QA org"
     jobs:
       - deployment: 
         pool:
