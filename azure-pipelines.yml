@@ -48,7 +48,7 @@ stages:
             displayName: "Salesforce org connection doublecheck  __ org 1"
 
           - bash:
-              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce.org -c
+              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce.org
             displayName: "Salesforce test without deploy"
 ##-------------------------------------------------------------------------------------------------------------------------------
 ##-------------------------------------------------------------------------------------------------------------------------------
@@ -76,11 +76,11 @@ stages:
           runOnce:
             deploy:
               steps:
-              - task: UseNode@1
-              - task: Npm@1
-                inputs:
-                  command: custom
-                  customCommand: install sfdx-cli --global
+              # - task: UseNode@1
+              # - task: Npm@1
+              #   inputs:
+              #     command: custom
+              #     customCommand: install sfdx-cli --global
 
               - bash: 
                   touch access.key
