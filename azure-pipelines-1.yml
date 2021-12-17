@@ -126,10 +126,10 @@ stages:
                         
                 - bash:
                     pwd 
+                - script: # script path or inline
+                  workingDirectory: /home/vsts/work/1/s/
                 - bash:
-                    cd ..
-                - bash:
-                    pwd
+                    ls
 
 
 
@@ -162,9 +162,9 @@ stages:
                     sfdx force:org:display -u salesforce.org
                   displayName: "Salesforce org connection doublecheck  __ org 1"
        
-                - bash:
-                    sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce.org -ls
-                  displayName: "Salesforce test without deploy"
+                # - bash:
+                #     sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce.org -ls
+                #   displayName: "Salesforce test without deploy"
 
 
 
