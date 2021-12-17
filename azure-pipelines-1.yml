@@ -126,6 +126,7 @@ stages:
                       echo  '$(System.DefaultWorkingDirectory)'
                       dir
                       dir azureTest_02
+                      cd azureTest_02
                 - task: CmdLine@2
                   inputs:
                      script: dir
