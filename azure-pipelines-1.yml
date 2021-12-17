@@ -24,6 +24,7 @@ stages:
 
         steps:
           - bash:
+             echo $(System.DefaultWorkingDirectory)
              ls
             displayName: "REG end"
 
