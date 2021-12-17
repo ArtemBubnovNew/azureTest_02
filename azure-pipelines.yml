@@ -104,7 +104,7 @@ stages:
         environment:  'Dev'
         strategy:
           runOnce:
-            preDeploy:
+            deploy:
               pool:
                 name: Azure Pipelines
                 vmImage: ubuntu-latest  
@@ -130,12 +130,7 @@ stages:
                 - bash: 
                     sfdx force:org:display -u salesforce.org
                   displayName: "Salesforce org connection doublecheck  __ org 1"
-
-            deploy:
-              pool:
-                name: Azure Pipelines
-                vmImage: ubuntu-latest  
-              steps:                    
+       
                 - bash:
                     sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce.org -c
                   displayName: "Salesforce test without deploy"
