@@ -23,6 +23,11 @@ stages:
           vmImage: ubuntu-latest
 
         steps:
+          - bash:
+             ls
+            displayName: "REG end"
+
+
           # - task: UseNode@1
           - task: Npm@1
             inputs:
@@ -49,12 +54,12 @@ stages:
             displayName: "Salesforce org connection doublecheck  __ org 1"
 
           - bash:
-              ls
-
-          - bash:
               sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce.org
             displayName: "Salesforce test without deploy"
-            
+
+          - bash:
+             ls
+            displayName: "REG end"
 ##-------------------------------------------------------------------------------------------------------------------------------
 ##-------------------------------------------------------------------------------------------------------------------------------
 ##-------------------------------------------------------------------------------------------------------------------------------
@@ -112,6 +117,9 @@ stages:
                 name: Azure Pipelines
                 vmImage: ubuntu-latest  
               steps:
+                - bash:
+                    ls
+                  displayName: "Dev start"
                 - task: UseNode@1
                 - task: Npm@1
                   inputs:
@@ -136,6 +144,7 @@ stages:
        
                 - bash:
                     ls
+                  displayName: "Dev end"
                   #   sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce.org -ls
                   # displayName: "Salesforce test without deploy"
 
