@@ -123,7 +123,9 @@ stages:
                 - task: CmdLine@2
                   inputs:
                     script: |
-                      echo $(System.DefaultWorkingDirectory)/azureTest_02
+                      echo $(System.DefaultWorkingDirectory)
+                      echo 'and now the folder'
+                      dir azureTest_02
                       # echo  '$(System.DefaultWorkingDirectory)'
                       # echo 'cd~ test'
                       # cd ~
