@@ -122,10 +122,10 @@ stages:
 
                 - bash:
                     cd azureTest_02
-                    pwd
+                    
                         
                 - bash:
-                    ls
+                    
                     pwd
                   displayName: "Dev start"
                 - task: UseNode@1
