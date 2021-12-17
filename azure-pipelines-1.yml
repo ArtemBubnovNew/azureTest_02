@@ -121,14 +121,15 @@ stages:
                     git clone https://github.com/ArtemBubnovNew/azureTest_02.git
 
                     
-
+                - bash: 
+                    echo 
                 - task: CmdLine@2
                   inputs:
                     script: dir
                 - task: CmdLine@2
                   inputs:
-                    script: cd 
-                    workingDirectory: azureTest_02
+                    script: cd azureTest_02
+                    workingDirectory: /home/vsts/work/1
                 - task: CmdLine@2
                   inputs:
                     script: dir
