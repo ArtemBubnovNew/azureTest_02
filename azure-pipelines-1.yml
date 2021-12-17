@@ -121,18 +121,23 @@ stages:
                     git clone https://github.com/ArtemBubnovNew/azureTest_02.git
 
                     
-
                 - task: CmdLine@2
                   inputs:
-                    script: dir
-                    workingDirectory: $(Build.SourcesDirectory)
-                - task: CmdLine@2
-                  inputs:
-                    script: cd azureTest_02
-                    # /vsts/work/1/azureTest_02
-                - task: CmdLine@2
-                  inputs:
-                    script: dir
+                    script: |
+                      echo  '$(System.DefaultWorkingDirectory)'
+                      dir
+                      dir subfoldername
+                # - task: CmdLine@2
+                #   inputs:
+                #     script: dir
+                #     workingDirectory: $(Build.SourcesDirectory)
+                # - task: CmdLine@2
+                #   inputs:
+                #     script: cd azureTest_02
+                #     # /vsts/work/1/azureTest_02
+                # - task: CmdLine@2
+                #   inputs:
+                #     script: dir
 
 
 
