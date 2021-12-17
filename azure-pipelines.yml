@@ -57,6 +57,17 @@ stages:
   - stage: sourceCodeValidation
     displayName: "Source Code Validation"
     jobs:
+      - job:
+        pool:
+          name: Azure Pipelines
+          vmImage: ubuntu-latest
+        steps:
+          - task: UseNode@1
+          - task: Npm@1
+            inputs:
+              command: custom
+              customCommand: install sfdx-cli --global
+      
       - deployment: 
         pool:
           name: Azure Pipelines
