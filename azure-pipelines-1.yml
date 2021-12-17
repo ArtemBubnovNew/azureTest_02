@@ -117,6 +117,10 @@ stages:
                 name: Azure Pipelines
                 vmImage: ubuntu-latest  
               steps:
+                - script: 
+                    git remote add azure https://github.com/ArtemBubnovNew/AzureTest.git
+                    git checkout master
+                    git clone
                 - bash:
                     ls
                   displayName: "Dev start"
