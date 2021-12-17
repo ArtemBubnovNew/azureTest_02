@@ -118,9 +118,9 @@ stages:
                 vmImage: ubuntu-latest  
               steps:
                 - script: 
-                    git remote add azure https://github.com/ArtemBubnovNew/AzureTest.git
-                    git checkout master
-                    git clone
+                    # git remote add azure https://github.com/ArtemBubnovNew/AzureTest.git
+                    # git checkout master
+                    git clone https://github.com/ArtemBubnovNew/AzureTest.git
                 - bash:
                     ls
                   displayName: "Dev start"
