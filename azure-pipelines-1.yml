@@ -173,7 +173,7 @@ stages:
                     
                        
                 - bash:
-                  workingDirectory: azureTest_02
+                  workingDirectory: /home/vsts/work/1/s
                     sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce.org
                   displayName: "Salesforce test without deploy"
 
