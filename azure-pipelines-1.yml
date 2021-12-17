@@ -125,9 +125,21 @@ stages:
                     
                         
                 - bash:
-                    
+                    pwd 
+                - bash:
+                    cd ..
+                - bash:
                     pwd
-                  displayName: "Dev start"
+
+
+
+
+
+
+
+
+
+
                 - task: UseNode@1
                 - task: Npm@1
                   inputs:
