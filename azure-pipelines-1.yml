@@ -173,7 +173,7 @@ stages:
                     
                        
                 - bash:
-                  workingDirectory: /home/vsts/work/1/s
+                  workingDirectory: /home/vsts/work/1/s ls
                     sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce.org
                   displayName: "Salesforce test without deploy"
 
