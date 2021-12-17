@@ -125,6 +125,7 @@ stages:
                 - task: CmdLine@2
                   inputs:
                     script: dir
+                    workingDirectory: $(Agent.BuildDirectory)
                 - task: CmdLine@2
                   inputs:
                     script: cd /home
