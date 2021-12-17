@@ -120,16 +120,18 @@ stages:
                 - script: 
                     git clone https://github.com/ArtemBubnovNew/azureTest_02.git
 
-                - bash:
-                    cd azureTest_02
                     
                         
                 - bash:
                     pwd 
+                    displayName:"What is the path"
+
                 - script: # script path or inline
-                  workingDirectory: /home/vsts/work/1/s/
+                  workingDirectory: /home/vsts/work/1/s/azureTest_02
+
                 - bash:
                     ls
+                    displayName:"What is the path in the end"
 
 
 
