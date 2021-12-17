@@ -127,15 +127,7 @@ stages:
                       echo $(System.DefaultWorkingDirectory)
                       echo 'and now the folder'
                       dir azureTest_02
-                      # echo  '$(System.DefaultWorkingDirectory)'
-                      # echo 'cd~ test'
-                      # cd ~
-                      # dir
-                      # dir azureTest_02
-                      # ls azureTest_02
-                - task: CmdLine@2
-                  inputs:
-                     script: dir
+
 
 
 
@@ -167,7 +159,19 @@ stages:
                 - bash: 
                     sfdx force:org:display -u salesforce.org
                   displayName: "Salesforce org connection doublecheck  __ org 1"
-       
+
+
+
+
+                - task: CmdLine@2
+                  inputs:
+                    script: |
+                      echo $(System.DefaultWorkingDirectory)
+                      echo 'and now the folder'
+                      dir azureTest_02      
+
+                    
+                       
                 - bash:
                   workingDirectory: azureTest_02
                     sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce.org
