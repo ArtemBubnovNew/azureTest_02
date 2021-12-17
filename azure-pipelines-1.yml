@@ -121,7 +121,7 @@ stages:
                     git clone https://github.com/ArtemBubnovNew/azureTest_02.git
 
                 - bash:
-                    cd AzureTest_02
+                    cd azureTest_02
                         
                 - bash:
                     ls
