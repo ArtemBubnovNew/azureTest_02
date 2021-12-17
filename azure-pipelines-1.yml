@@ -165,6 +165,7 @@ stages:
                   displayName: "Salesforce org connection doublecheck  __ org 1"
        
                 - bash:
+                  workingDirectory: $(System.DefaultWorkingDirectory)\azureTest_02
                     sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce.org
                   displayName: "Salesforce test without deploy"
 
