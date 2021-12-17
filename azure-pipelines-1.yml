@@ -119,7 +119,6 @@ stages:
               steps:
                 - script: 
                     git clone https://github.com/ArtemBubnovNew/azureTest_02.git
-
                     
                 - task: CmdLine@2
                   inputs:
@@ -127,17 +126,6 @@ stages:
                       echo  '$(System.DefaultWorkingDirectory)'
                       dir
                       dir azureTest_02
-                # - task: CmdLine@2
-                #   inputs:
-                #     script: dir
-                #     workingDirectory: $(Build.SourcesDirectory)
-                # - task: CmdLine@2
-                #   inputs:
-                #     script: cd azureTest_02
-                #     # /vsts/work/1/azureTest_02
-                # - task: CmdLine@2
-                #   inputs:
-                #     script: dir
 
 
 
@@ -149,7 +137,7 @@ stages:
 
 
 
-                - task: UseNode@1
+                # - task: UseNode@1
                 - task: Npm@1
                   inputs:
                     command: custom
@@ -171,9 +159,9 @@ stages:
                     sfdx force:org:display -u salesforce.org
                   displayName: "Salesforce org connection doublecheck  __ org 1"
        
-                # - bash:
-                #     sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce.org -ls
-                #   displayName: "Salesforce test without deploy"
+                - bash:
+                    sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce.org -ls
+                  displayName: "Salesforce test without deploy"
 
 
 
@@ -229,3 +217,17 @@ stages:
     #           - bash:
     #               sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce.org -c
     #             displayName: "Salesforce test without deploy"
+    
+    
+    
+                    # - task: CmdLine@2
+                #   inputs:
+                #     script: dir
+                #     workingDirectory: $(Build.SourcesDirectory)
+                # - task: CmdLine@2
+                #   inputs:
+                #     script: cd azureTest_02
+                #     # /vsts/work/1/azureTest_02
+                # - task: CmdLine@2
+                #   inputs:
+                #     script: dir
