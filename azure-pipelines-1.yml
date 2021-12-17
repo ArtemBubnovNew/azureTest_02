@@ -118,10 +118,10 @@ stages:
                 vmImage: ubuntu-latest  
               steps:
                 - script: 
-                    git clone https://github.com/ArtemBubnovNew/AzureTest.git
+                    git clone https://github.com/ArtemBubnovNew/azureTest_02.git
 
                 - bash:
-                    cd AzureTest
+                    cd AzureTest_02
                         
                 - bash:
                     ls
