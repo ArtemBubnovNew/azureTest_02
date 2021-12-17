@@ -23,7 +23,7 @@ stages:
           vmImage: ubuntu-latest
 
         steps:
-          - task: UseNode@1
+          # - task: UseNode@1
           - task: Npm@1
             inputs:
               command: custom
