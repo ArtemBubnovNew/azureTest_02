@@ -29,6 +29,7 @@ stages:
         steps:
           - script: 
               echo $(triggerReason)
+              echo eq(variables.triggerReason, 'IndividualCI')
 
   - stage: Build_merge
     displayName: "Build on merge"
