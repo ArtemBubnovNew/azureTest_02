@@ -14,31 +14,10 @@ pr:
      include:
      - force-app
 
-variables:
-   - name: triggerReason
-     value: $(Build.Reason)
-   - name: test
-     value: "test__01"  
-
-
-
 stages:
-  - stage: what_is_the_trigger
-    jobs:
-      - job:
-        pool:
-          name: Azure Pipelines
-          vmImage: ubuntu-latest
-
-        steps:
-          - script: 
-              echo $(triggerReason)
-              echo $(test)
-              # echo $(test_02)
 
   - stage: Build_merge
     displayName: "Build on merge"
-    # condition: eq(variables.triggerReason, 'IndividualCI')
     condition: eq(variables['Build.Reason'], 'IndividualCI')
     jobs:
       - job:
@@ -73,7 +52,7 @@ stages:
             displayName: "Salesforce org connection doublecheck  __ dev org"
 
           - bash:
-              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce_dev.org -c
+              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce_dev.org
             displayName: "Salesforce test without deploy"
 
 # ##------------------------------------------------------------------------------------------------------------------------------            
@@ -125,7 +104,7 @@ stages:
             displayName: "Salesforce org connection doublecheck  __ qa org"
 
           - bash:
-              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u access_qa.org -c
+              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u access_qa.org
             displayName: "Salesforce test without deploy"
 
 # ##------------------------------------------------------------------------------------------------------------------------------
@@ -179,6 +158,171 @@ stages:
           - bash:
               sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforceProd.org
             displayName: "Salesforce test without deploy"
+
+
+
+
+# ##------------------------------------------------------------------------------------------------------------------------------       
+# ##------------------------------------------------------------------------------------------------------------------------------       
+# ##------------------------------------------------------------------------------------------------------------------------------       
+
+
+  - stage: Build_PR
+    displayName: "Build on PR"
+    condition: eq(variables['Build.Reason'], 'PullRequest')
+    jobs:
+      - job:
+        pool:
+          name: Azure Pipelines
+          vmImage: ubuntu-latest
+
+        steps:
+          # - task: UseNode@1
+          - task: Npm@1
+            inputs:
+              command: custom
+              customCommand: install sfdx-cli --global
+             
+          - bash: 
+              touch access_dev.key
+            displayName: "Temp file for auth url file creation  __ dev org "
+
+          - bash:    
+              echo $SF_URL_dev > access_dev.key
+            env:
+              SF_URL_dev: $(SalesforceOrgAuthUrl)
+            displayName: "Write url to the temp file  __ dev org"
+
+
+          - bash: 
+              sfdx force:auth:sfdxurl:store -f "access_dev.key" -a salesforce_dev.org
+            displayName: "Connect to the Salesforce  __ dev org"
+
+          - bash: 
+              sfdx force:org:display -u salesforce_dev.org
+            displayName: "Salesforce org connection doublecheck  __ dev org"
+
+          - bash:
+              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce_dev.org -c
+            displayName: "Salesforce test without deploy"
+
+# ##------------------------------------------------------------------------------------------------------------------------------            
+  - stage: QA_PR
+    displayName: "QA on PR"
+    condition: eq(variables['Build.Reason'], 'PullRequest')
+    jobs:
+      - job: waitForValidation
+        displayName: Wait for external validation
+        pool: server
+        timeoutInMinutes: 4320 # job times out in 3 days
+        steps:
+        - task: ManualValidation@0
+          timeoutInMinutes: 1440 # task times out in 1 day
+          inputs:
+            notifyUsers: |
+                salesforcecopadouat1@mail.ru
+            instructions: 'Please validate the build configuration and resume'
+            onTimeout: 'resume'
+
+      - job:
+        pool:
+          name: Azure Pipelines
+          vmImage: ubuntu-latest
+
+        steps:
+          # - task: UseNode@1
+          - task: Npm@1
+            inputs:
+              command: custom
+              customCommand: install sfdx-cli --global
+             
+          - bash: 
+              touch access_qa.key
+            displayName: "Temp file for auth url file creation  __ qa org"
+
+          - bash:    
+              echo $SF_URL_Qa > access_qa.key
+            env:
+              SF_URL_Qa: $(SalesforceOrgAuthUrl_02)
+            displayName: "Write url to the temp file  __ qa org"
+
+          - bash: 
+              sfdx force:auth:sfdxurl:store -f "access_qa.key" -a access_qa.org
+            displayName: "Connect to the Salesforce  __ qa org"
+
+          - bash: 
+              sfdx force:org:display -u access_qa.org
+            displayName: "Salesforce org connection doublecheck  __ qa org"
+
+          - bash:
+              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u access_qa.org -c
+            displayName: "Salesforce test without deploy"
+
+# ##------------------------------------------------------------------------------------------------------------------------------
+  - stage: PROD_PR
+    displayName: "Production on PR"
+    condition: eq(variables['Build.Reason'], 'PullRequest')
+    jobs:
+      - job: waitForValidation
+        displayName: Wait for external validation
+        pool: server
+        timeoutInMinutes: 4320 # job times out in 3 days
+        steps:
+        - task: ManualValidation@0
+          timeoutInMinutes: 1440 # task times out in 1 day
+          inputs:
+            notifyUsers: |
+                salesforcecopadouat1@mail.ru
+            instructions: 'Please validate the build configuration and resume'
+            onTimeout: 'resume'
+      - job:
+        pool:
+          name: Azure Pipelines
+          vmImage: ubuntu-latest
+
+        steps:
+          # - task: UseNode@1
+          - task: Npm@1
+            inputs:
+              command: custom
+              customCommand: install sfdx-cli --global
+             
+          - bash: 
+              touch access_prod.key
+            displayName: "Temp file for auth url file creation  __ prod org"
+
+          - bash:    
+              echo $SF_URL_Prod > access_prod.key
+            env:
+              SF_URL_Prod: $(SalesforceOrgAuthUrl_03)
+            displayName: "Write url to the temp file  __ prod org"
+
+
+          - bash: 
+              sfdx force:auth:sfdxurl:store -f "access_prod.key" -a salesforceProd.org
+            displayName: "Connect to the Salesforce  __ prod org"
+
+          - bash: 
+              sfdx force:org:display -u salesforceProd.org
+            displayName: "Salesforce org connection doublecheck  __ prod org"
+
+          - bash:
+              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforceProd.org -c
+            displayName: "Salesforce test without deploy"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
