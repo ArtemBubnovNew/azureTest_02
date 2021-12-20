@@ -36,7 +36,7 @@ stages:
   - stage: Build_merge
     displayName: "Build on merge"
     # condition: eq(variables.triggerReason, 'IndividualCI')
-    condition: eq(variables.triggerReason, Manual)
+    condition: eq(variables.triggerReason, "Manual")
     jobs:
       - job:
         pool:
