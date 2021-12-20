@@ -25,6 +25,8 @@ variables:
 steps:
   - script: 
       echo "test"
+      echo $(triggerReason)
+
 # stages:
 #   - stage: a
 
