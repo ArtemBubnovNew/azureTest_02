@@ -14,8 +14,26 @@ pr:
      include:
      - force-app
 
-# variables:
-#   ${{ if eq(variables['Build.Reason.PullRequest'])}}
+variables:
+  triggerReason:
+    ${{ if eq(variables['Build.Reason'], 'PullRequest')}}:
+      triggerCasePR: PullRequest
+    ${{ else }}:
+      triggerCaseTrig: ResourceTrigger  
+  testVar: "testVar__001"
+
+    # ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+    #   test1: 'prod'
+    # ${{ else }}:
+    #   test2: 'dev'
+
+
+  # - ${{ if eq(variables['Build.Reason'], 'PullRequest')}}:
+  #     triggerCase: PullRequest
+  #   ${{ else }}:
+  #     triggerCase: ResourceTrigger    
+  # # - ${{ if eq(variables['Build.Reason'], 'ResourceTrigger')}}:
+  # #     triggerCasePR: ResourceTrigger
 
 stages:
   - stage: develop
@@ -29,4 +47,5 @@ stages:
         steps:
           - script: |
               echo "the followin is the reason why"
-              echo "Build.Reason"
+              echo testVar
+              echo triggerReason
