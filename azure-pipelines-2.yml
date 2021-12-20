@@ -14,34 +14,74 @@ pr:
      include:
      - force-app
 
+pool:
+  name: Azure Pipelines
+  vmImage: ubuntu-latest
+
 variables:
   - name: triggerReason
     value: $(Build.Reason)
 
-stages:
-  - stage: a
+steps:
+  - script: 
+      echo "test"
+      echo $(triggerReason)
 
-    condition: eq(variables.triggerReason, 'ResourceTrigger')
-    jobs:
-      - job:
-        pool:
-          name: Azure Pipelines
-          vmImage: ubuntu-latest
-          steps:
-           - script: 
-               echo "this been triggered on ResourceTrigger(merge)"
+# stages:
+#   - stage: a
+
+#     # condition: eq(variables.triggerReason, 'ResourceTrigger')
+#     jobs:
+#       - job:
+#         pool:
+#           name: Azure Pipelines
+#           vmImage: ubuntu-latest
+#           steps:
+#            - script: 
+#                echo "this been triggered on ResourceTrigger(merge)"
+#                echo $(triggerReason)
+
+#   - stage: b
+
+#     # condition: eq(variables.triggerReason, 'ResourceTrigger')
+#     jobs:
+#       - job:
+#         pool:
+#           name: Azure Pipelines
+#           vmImage: ubuntu-latest
+#           steps:
+#            - script: 
+#                echo "this been triggered on ResourceTrigger(merge)"
+#                echo $(triggerReason)
+               
 
 
-  - stage: b
-    condition: eq(variables.triggerReason, 'PullRequest')
-    jobs:
-      - job:
-        pool:
-          name: Azure Pipelines
-          vmImage: ubuntu-latest
-          steps:
-           - script: 
-               echo "this been triggered on PullRequest(PR)"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  # - stage: b
+  #   condition: eq(variables.triggerReason, 'PullRequest')
+  #   jobs:
+  #     - job:
+  #       pool:
+  #         name: Azure Pipelines
+  #         vmImage: ubuntu-latest
+  #         steps:
+  #          - script: 
+  #              echo "this been triggered on PullRequest(PR)"
 
 
 
