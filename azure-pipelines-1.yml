@@ -65,7 +65,7 @@ stages:
         displayName: "Send an approval request notification email for Users"
         pool:
             name: Azure Pipelines
-            vmImage: ubuntu-latest
+            vmImage: windows-latest
         steps:
         - task: SendEmail@1
           displayName: 'Send an email with subject test subject'
