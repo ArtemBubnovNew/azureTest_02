@@ -119,15 +119,15 @@ stages:
 
 
           - bash: 
-              sfdx force:auth:sfdxurl:store -f "access_prod.key" -a salesforce prod.org
+              sfdx force:auth:sfdxurl:store -f "access_prod.key" -a salesforce_prod.org
             displayName: "Connect to the Salesforce  __ prod org"
 
           - bash: 
-              sfdx force:org:display -u salesforce prod.org
+              sfdx force:org:display -u salesforce_prod.org
             displayName: "Salesforce org connection doublecheck  __ prod org"
 
           - bash:
-              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce prod.org
+              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce_prod.org
             displayName: "Salesforce test without deploy"
 
 
