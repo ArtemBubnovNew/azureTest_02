@@ -19,8 +19,8 @@ variables:
      value: $(Build.Reason)
    - name: test
      value: "test__01"  
-   - name: test_02
-     value: eq(variables['Build.Reason'], 'Manual')
+  #  - name: test_02
+  #    value: eq(variables['Build.Reason'], 'Manual')
 # variables['Build.SourceBranch']
 # $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
 # eq(variables['SHOULDTRIGGERANYBUILD'], 'True')
@@ -39,12 +39,12 @@ stages:
           - script: 
               echo $(triggerReason)
               echo $(test)
-              echo $(test_02)
+              # echo $(test_02)
 
   - stage: Build_merge
     displayName: "Build on merge"
     # condition: eq(variables.triggerReason, 'IndividualCI')
-    condition: eq(variables.triggerReason, "Manual")
+    condition: eq(variables['Build.Reason'], 'Manual')
     jobs:
       - job:
         pool:
