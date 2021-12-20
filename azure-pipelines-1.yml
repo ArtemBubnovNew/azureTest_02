@@ -16,7 +16,7 @@ pr:
 
 
 stages:
-  - stage: Build merge
+  - stage: Build_merge
     displayName: "Build on merge"
     condition: eq(variables.triggerReason, 'IndividualCI')
     jobs:
@@ -56,7 +56,7 @@ stages:
             displayName: "Salesforce test without deploy"
 
 # ##------------------------------------------------------------------------------------------------------------------------------            
-  - stage: qa
+  - stage: QA_merge
     displayName: "QA on merge"
     condition: eq(variables.triggerReason, 'IndividualCI')
     jobs:
@@ -108,7 +108,7 @@ stages:
             displayName: "Salesforce test without deploy"
 
 # ##------------------------------------------------------------------------------------------------------------------------------
-  - stage: prod
+  - stage: PROD_merge
     displayName: "Production on merge"
     condition: eq(variables.triggerReason, 'IndividualCI')
     jobs:
