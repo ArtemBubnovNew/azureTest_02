@@ -34,6 +34,7 @@ stages:
           - script: 
               echo $(triggerReason)
               echo $(test)
+              echo $(test_02)
 
   - stage: Build_merge
     displayName: "Build on merge"
