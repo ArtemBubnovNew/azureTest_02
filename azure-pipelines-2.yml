@@ -14,12 +14,44 @@ pr:
      include:
      - force-app
 
-variables:
-    ${{ if eq(variables['Build.Reason'], 'PullRequest')}}:
-      triggerCasePR: PullRequest
-    ${{ else }}:
-      triggerCaseTrig: ResourceTrigger  
-    testVar: "testVar__001"
+stages:
+  - stage: a
+    condition: eq(variables['Build.Reason'], 'ResourceTrigger')
+    jobs:
+      - job:
+        pool:
+          name: Azure Pipelines
+          vmImage: ubuntu-latest
+          steps:
+           - script: |
+               echo "this been triggered on ResourceTrigger(merge)"
+
+
+  - stage: b
+    condition: eq(variables['Build.Reason'], 'PullRequest')
+    jobs:
+      - job:
+        pool:
+          name: Azure Pipelines
+          vmImage: ubuntu-latest
+          steps:
+           - script: |
+               echo "this been triggered on PullRequest(PR)"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     # ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
     #   test1: 'prod'
@@ -34,17 +66,17 @@ variables:
   # # - ${{ if eq(variables['Build.Reason'], 'ResourceTrigger')}}:
   # #     triggerCasePR: ResourceTrigger
 
-stages:
-  - stage: develop
-    displayName: "develop"
-    jobs:
-      - job:
-        pool:
-          name: Azure Pipelines
-          vmImage: ubuntu-latest
+# stages:
+#   - stage: develop
+#     displayName: "develop"
+#     jobs:
+#       - job:
+#         pool:
+#           name: Azure Pipelines
+#           vmImage: ubuntu-latest
 
-        steps:
-          - script: |
-              echo "the followin is the reason why"
-              echo $(testVar)
-              echo triggerReason
+#         steps:
+#           - script: |
+#               echo "the followin is the reason why"
+#               echo $(testVar)
+#               echo triggerReason
