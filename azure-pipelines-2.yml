@@ -23,7 +23,7 @@
 #     value: $(Build.Reason)
 
 # # steps:
-# #   - script: 
+# #   - script:  
 # #       echo "test"
 # #       echo $(triggerReason)
 
