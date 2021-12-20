@@ -16,7 +16,7 @@ pr:
 
 stages:
   - stage: a
-    condition: eq(['Build.Reason'], 'ResourceTrigger')
+    condition: eq([Build.Reason], 'ResourceTrigger')
     jobs:
       - job:
         pool:
@@ -28,7 +28,7 @@ stages:
 
 
   - stage: b
-    condition: eq(['Build.Reason'], 'PullRequest')
+    condition: eq([Build.Reason], 'PullRequest')
     jobs:
       - job:
         pool:
