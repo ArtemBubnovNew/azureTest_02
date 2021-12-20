@@ -14,10 +14,14 @@ pr:
      include:
      - force-app
 
+variables:
+  - name: triggerReason
+    value: $(Build.Reason)
+
 stages:
   - stage: a
 
-    condition: eq('$(Build.Reason)', 'ResourceTrigger'))
+    condition: eq(variables.triggerReason, 'ResourceTrigger'))
     jobs:
       - job:
         pool:
@@ -29,7 +33,7 @@ stages:
 
 
   - stage: b
-    condition: eq('$(Build.Reason)', 'PullRequest'))
+    condition: eq(variables.triggerReason, 'PullRequest'))
     jobs:
       - job:
         pool:
