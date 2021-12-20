@@ -45,12 +45,9 @@ stages:
 
     # condition: eq(variables.triggerReason, 'ResourceTrigger')
     jobs:
-  
     - job: waitForValidation
       displayName: Wait for external validation
-      pool:
-          name: Azure Pipelines
-          vmImage: ubuntu-latest
+      pool: server
       timeoutInMinutes: 4320 # job times out in 3 days
       steps:
       - task: ManualValidation@0
@@ -61,7 +58,7 @@ stages:
           instructions: 'Please validate the build configuration and resume'
           onTimeout: 'resume'
 
-
+# salesforcecopadouat1@mail.ru
 
 
 
