@@ -15,12 +15,11 @@ pr:
      - force-app
 
 variables:
-  triggerReason:
     ${{ if eq(variables['Build.Reason'], 'PullRequest')}}:
       triggerCasePR: PullRequest
     ${{ else }}:
       triggerCaseTrig: ResourceTrigger  
-  testVar: "testVar__001"
+    testVar: "testVar__001"
 
     # ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
     #   test1: 'prod'
