@@ -19,11 +19,6 @@ variables:
      value: $(Build.Reason)
    - name: test
      value: "test__01"  
-  #  - name: test_02
-  #    value: eq(variables['Build.Reason'], 'Manual')
-# variables['Build.SourceBranch']
-# $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
-# eq(variables['SHOULDTRIGGERANYBUILD'], 'True')
 
 
 
@@ -84,7 +79,7 @@ stages:
 # ##------------------------------------------------------------------------------------------------------------------------------            
   - stage: QA_merge
     displayName: "QA on merge"
-    condition: eq(variables.triggerReason, 'IndividualCI')
+    condition: eq(variables['Build.Reason'], 'IndividualCI')
     jobs:
       - job: waitForValidation
         displayName: Wait for external validation
@@ -136,7 +131,7 @@ stages:
 # ##------------------------------------------------------------------------------------------------------------------------------
   - stage: PROD_merge
     displayName: "Production on merge"
-    condition: eq(variables.triggerReason, 'IndividualCI')
+    condition: eq(variables['Build.Reason'], 'IndividualCI')
     jobs:
       - job: waitForValidation
         displayName: Wait for external validation
