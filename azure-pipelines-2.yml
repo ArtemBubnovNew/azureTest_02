@@ -21,7 +21,7 @@ variables:
 stages:
   - stage: a
 
-    condition: eq(variables.triggerReason, 'ResourceTrigger'))
+    condition: eq(variables.triggerReason, 'ResourceTrigger')
     jobs:
       - job:
         pool:
@@ -33,7 +33,7 @@ stages:
 
 
   - stage: b
-    condition: eq(variables.triggerReason, 'PullRequest'))
+    condition: eq(variables.triggerReason, 'PullRequest')
     jobs:
       - job:
         pool:
