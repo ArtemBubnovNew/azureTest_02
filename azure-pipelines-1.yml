@@ -71,6 +71,7 @@ stages:
           name: Azure Pipelines
           vmImage: ubuntu-latest
 
+        steps:
           # - task: UseNode@1
           - task: Npm@1
             inputs:
@@ -82,22 +83,21 @@ stages:
             displayName: "Temp file for auth url file creation  __ org 1"
 
           - bash:    
-              echo $SF_URL > access.key
+              echo $SF_URL_Dev > access_dev.key
             env:
-              SF_URL: $(SalesforceOrgAuthUrl)
+              SF_URL_Dev: $(SalesforceOrgAuthUrl)
             displayName: "Write url to the temp file  __ org 1"
 
-
           - bash: 
-              sfdx force:auth:sfdxurl:store -f "access.key" -a salesforce.org
+              sfdx force:auth:sfdxurl:store -f "access_dev.key" -a salesforce_dev.org
             displayName: "Connect to the Salesforce  __ org 1"
 
           - bash: 
-              sfdx force:org:display -u salesforce.org
+              sfdx force:org:display -u salesforce_dev.org
             displayName: "Salesforce org connection doublecheck  __ org 1"
 
           - bash:
-              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce.org
+              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce_dev.org
             displayName: "Salesforce test without deploy"
 
 ##------------------------------------------------------------------------------------------------------------------------------
