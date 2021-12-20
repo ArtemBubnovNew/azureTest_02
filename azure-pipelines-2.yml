@@ -29,4 +29,4 @@ stages:
         steps:
           - script: |
               echo "the followin is the reason why"
-              echo Build.Reason
+              echo "Build.Reason"
