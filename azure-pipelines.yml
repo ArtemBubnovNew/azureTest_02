@@ -1,0 +1,191 @@
+# trigger:
+#   branches:
+#       include:
+#       - '*'
+#   paths:
+#      include:
+#      - force-app/*
+
+# pr:
+#   branches:
+#       include:
+#       - '*'
+#   paths:
+#      include:
+#      - force-app
+
+# stages:
+#   - stage: build
+#     jobs:
+#       - job:
+#         pool:
+#           name: Azure Pipelines
+#           vmImage: ubuntu-latest
+
+#         steps:
+#           # - task: UseNode@1
+#           - task: Npm@1
+#             inputs:
+#               command: custom
+#               customCommand: install sfdx-cli --global
+             
+#           - bash: 
+#               touch access.key
+#             displayName: "Temp file for auth url file creation  __ org 1"
+
+#           - bash:    
+#               echo $SF_URL > access.key
+#             env:
+#               SF_URL: $(SalesforceOrgAuthUrl)
+#             displayName: "Write url to the temp file  __ org 1"
+
+
+#           - bash: 
+#               sfdx force:auth:sfdxurl:store -f "access.key" -a salesforce.org
+#             displayName: "Connect to the Salesforce  __ org 1"
+
+#           - bash: 
+#               sfdx force:org:display -u salesforce.org
+#             displayName: "Salesforce org connection doublecheck  __ org 1"
+
+#           - bash:
+#               sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce.org
+#             displayName: "Salesforce test without deploy"
+            
+# ##-------------------------------------------------------------------------------------------------------------------------------
+# ##-------------------------------------------------------------------------------------------------------------------------------
+# ##-------------------------------------------------------------------------------------------------------------------------------
+#   # - stage: deploy
+#     # jobs:
+#     #   - job:
+#     #     pool:
+#     #       name: Azure Pipelines
+#     #       vmImage: ubuntu-latest
+
+#     #     steps:
+#     #       - task: UseNode@1
+#     #       - task: Npm@1
+#     #         inputs:
+#     #           command: custom
+#     #           customCommand: install sfdx-cli --global
+             
+#     #       - bash: 
+#     #           touch access.key
+#     #         displayName: "Temp file for auth url file creation  __ org 1"
+
+#     #       - bash:    
+#     #           echo $SF_URL > access.key
+#     #         env:
+#     #           SF_URL: $(SalesforceOrgAuthUrl)
+#     #         displayName: "Write url to the temp file  __ org 1"
+
+
+#     #       - bash: 
+#     #           sfdx force:auth:sfdxurl:store -f "access.key" -a salesforce.org
+#     #         displayName: "Connect to the Salesforce  __ org 1"
+
+#     #       - bash: 
+#     #           sfdx force:org:display -u salesforce.org
+#     #         displayName: "Salesforce org connection doublecheck  __ org 1"
+
+#     #       - bash:
+#     #           sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce.org
+#     #         displayName: "Salesforce test without deploy"
+
+# ##-------------------------------------------------------------------------------------------------------------------------------
+# ##-------------------------------------------------------------------------------------------------------------------------------
+# ##-------------------------------------------------------------------------------------------------------------------------------
+
+
+#   - stage: DeploymentToBuildOrg
+#     displayName: "Deployment to Build org"
+#     jobs:
+#       - deployment: 
+#         environment:  'Dev'
+#         strategy:
+#           runOnce:
+#             deploy:
+#               pool:
+#                 name: Azure Pipelines
+#                 vmImage: ubuntu-latest  
+#               steps:
+#                 # - task: UseNode@1
+#                 - task: Npm@1
+#                   inputs:
+#                     command: custom
+#                     customCommand: install sfdx-cli --global
+#                 - bash: 
+#                     touch access.key
+#                   displayName: "Temp file for auth url file creation  __ org 1"
+
+#                 - bash:    
+#                     echo $SF_URL > access.key
+#                   env:
+#                     SF_URL: $(SalesforceOrgAuthUrl)
+#                   displayName: "Write url to the temp file  __ org 1"
+
+#                 - bash: 
+#                     sfdx force:auth:sfdxurl:store -f "access.key" -a salesforce.org
+#                   displayName: "Connect to the Salesforce  __ org 1"
+#                 - bash: 
+#                     sfdx force:org:display -u salesforce.org
+#                   displayName: "Salesforce org connection doublecheck  __ org 1"
+       
+#                 - bash:
+#                     sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce.org -c
+#                   displayName: "Salesforce test without deploy"
+
+
+
+
+#     # jobs:
+#     #   - preDeploy:
+#     #     pool:
+#     #       name: Azure Pipelines
+#     #       vmImage: ubuntu-latest
+#     #     strategy:
+#     #       runOnce:
+#     #         steps:
+#     #           - task: UseNode@1
+#     #           - task: Npm@1
+#     #             inputs:
+#     #             command: custom
+#     #           #     customCommand: install sfdx-cli --global
+
+#     #   - deployment: 
+#     #     pool:
+#     #       name: Azure Pipelines
+#     #       vmImage: ubuntu-latest
+#     #     environment: 'Dev'
+#     #     strategy:
+#     #       runOnce:
+#     #         deploy:
+#     #           steps:
+#     #           # - task: UseNode@1
+#     #           # - task: Npm@1
+#     #           #   inputs:
+#     #           #     command: custom
+#     #           #     customCommand: install sfdx-cli --global
+
+#     #           - bash: 
+#     #               touch access.key
+#     #             displayName: "Temp file for auth url file creation  __ org 1"
+
+#     #           - bash:    
+#     #               echo $SF_URL > access.key
+#     #             env:
+#     #               SF_URL: $(SalesforceOrgAuthUrl)
+#     #             displayName: "Write url to the temp file  __ org 1"
+
+
+#     #           - bash: 
+#     #               sfdx force:auth:sfdxurl:store -f "access.key" -a salesforce.org
+#     #             displayName: "Connect to the Salesforce  __ org 1"
+
+#     #           - bash: 
+#     #               sfdx force:org:display -u salesforce.org
+#     #             displayName: "Salesforce org connection doublecheck  __ org 1"
+
+#     #           - bash:
+#     #               sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce.org -c
+#     #             displayName: "Salesforce test without deploy"

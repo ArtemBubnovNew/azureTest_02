@@ -1,0 +1,127 @@
+trigger:
+  branches:
+      include:
+      - '*'
+  paths:
+     include:
+     - force-app/*
+
+pr:
+  branches:
+      include:
+      - '*'
+  paths:
+     include:
+     - force-app
+
+pool:
+  name: Azure Pipelines
+  vmImage: ubuntu-latest
+
+variables:
+  - name: triggerReason
+    value: $(Build.Reason)
+
+steps:
+  - script: 
+      echo "test"
+      echo $(triggerReason)
+
+# stages:
+#   - stage: a
+
+#     # condition: eq(variables.triggerReason, 'ResourceTrigger')
+#     jobs:
+#       - job:
+#         pool:
+#           name: Azure Pipelines
+#           vmImage: ubuntu-latest
+#           steps:
+#            - script: 
+#                echo "this been triggered on ResourceTrigger(merge)"
+#                echo $(triggerReason)
+
+#   - stage: b
+
+#     # condition: eq(variables.triggerReason, 'ResourceTrigger')
+#     jobs:
+#       - job:
+#         pool:
+#           name: Azure Pipelines
+#           vmImage: ubuntu-latest
+#           steps:
+#            - script: 
+#                echo "this been triggered on ResourceTrigger(merge)"
+#                echo $(triggerReason)
+               
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  # - stage: b
+  #   condition: eq(variables.triggerReason, 'PullRequest')
+  #   jobs:
+  #     - job:
+  #       pool:
+  #         name: Azure Pipelines
+  #         vmImage: ubuntu-latest
+  #         steps:
+  #          - script: 
+  #              echo "this been triggered on PullRequest(PR)"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+    #   test1: 'prod'
+    # ${{ else }}:
+    #   test2: 'dev'
+
+
+  # - ${{ if eq(variables['Build.Reason'], 'PullRequest')}}:
+  #     triggerCase: PullRequest
+  #   ${{ else }}:
+  #     triggerCase: ResourceTrigger    
+  # # - ${{ if eq(variables['Build.Reason'], 'ResourceTrigger')}}:
+  # #     triggerCasePR: ResourceTrigger
+
+# stages:
+#   - stage: develop
+#     displayName: "develop"
+#     jobs:
+#       - job:
+#         pool:
+#           name: Azure Pipelines
+#           vmImage: ubuntu-latest
+
+#         steps:
+#           - script: |
+#               echo "the followin is the reason why"
+#               echo $(testVar)
+#               echo triggerReason
