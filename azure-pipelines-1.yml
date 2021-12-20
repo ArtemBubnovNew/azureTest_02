@@ -20,8 +20,13 @@ variables:
    - name: test
      value: "test__01"  
    - name: test_02
-     value: eq(variables['Build.Reason'], 'Manual')
+     value: $[eq(variables['Build.Reason'], 'Manual')]
 # variables['Build.SourceBranch']
+# $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
+
+
+
+
 stages:
   - stage: what_is_the_trigger
     jobs:
