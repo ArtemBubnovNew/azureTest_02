@@ -19,7 +19,7 @@ variables:
      value: $(Build.Reason)
 
 stages:
-  - stage: what is the trigger
+  - stage: what_is_the_trigger
     jobs:
       - job:
         pool:
