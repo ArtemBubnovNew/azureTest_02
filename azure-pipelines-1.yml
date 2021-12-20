@@ -20,7 +20,7 @@ variables:
    - name: test
      value: "test__01"  
    - name: test_02
-     value: $(Build.Reason.Manual)
+     value: eq(variables.triggerReason, "Manual")
 
 stages:
   - stage: what_is_the_trigger
@@ -39,7 +39,7 @@ stages:
   - stage: Build_merge
     displayName: "Build on merge"
     # condition: eq(variables.triggerReason, 'IndividualCI')
-    condition: eq(variables.triggerReason.Manual, 'true')
+    condition: eq(variables.triggerReason, "Manual")
     jobs:
       - job:
         pool:
