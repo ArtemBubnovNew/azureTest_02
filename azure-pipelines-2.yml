@@ -23,7 +23,7 @@ stages:
           name: Azure Pipelines
           vmImage: ubuntu-latest
           steps:
-           - script: |
+           - script: 
                echo "this been triggered on ResourceTrigger(merge)"
 
 
@@ -35,7 +35,7 @@ stages:
           name: Azure Pipelines
           vmImage: ubuntu-latest
           steps:
-           - script: |
+           - script: 
                echo "this been triggered on PullRequest(PR)"
 
 
