@@ -22,37 +22,60 @@ variables:
   - name: triggerReason
     value: $(Build.Reason)
 
-steps:
-  - script: 
-      echo "test"
-      echo $(triggerReason)
+# steps:
+#   - script: 
+#       echo "test"
+#       echo $(triggerReason)
 
-# stages:
-#   - stage: a
+stages:
+  - stage: a
 
-#     # condition: eq(variables.triggerReason, 'ResourceTrigger')
-#     jobs:
-#       - job:
-#         pool:
-#           name: Azure Pipelines
-#           vmImage: ubuntu-latest
-#           steps:
-#            - script: 
-#                echo "this been triggered on ResourceTrigger(merge)"
-#                echo $(triggerReason)
+    # condition: eq(variables.triggerReason, 'ResourceTrigger')
+    jobs:
+      - job:
+        pool:
+          name: Azure Pipelines
+          vmImage: ubuntu-latest
+          steps:
+           - script: 
+                echo "this been triggered on ResourceTrigger(merge)"
+              #  echo $(triggerReason)
 
-#   - stage: b
+  - stage: b
 
-#     # condition: eq(variables.triggerReason, 'ResourceTrigger')
-#     jobs:
-#       - job:
-#         pool:
-#           name: Azure Pipelines
-#           vmImage: ubuntu-latest
-#           steps:
-#            - script: 
-#                echo "this been triggered on ResourceTrigger(merge)"
-#                echo $(triggerReason)
+    # condition: eq(variables.triggerReason, 'ResourceTrigger')
+    jobs:
+    - job: waitForValidation
+      displayName: Wait for external validation
+      pool: server
+      timeoutInMinutes: 4320 # job times out in 3 days
+      steps:
+      - task: ManualValidation@0
+        timeoutInMinutes: 1440 # task times out in 1 day
+        inputs:
+          notifyUsers: |
+            salesforcecopadouat1@mail.ru
+          instructions: 'Please validate the build configuration and resume'
+          onTimeout: 'resume'
+
+# salesforcecopadouat1@mail.ru
+
+
+
+
+
+
+
+
+
+    - job:
+      pool:
+          name: Azure Pipelines
+          vmImage: ubuntu-latest
+          steps:
+           - script: 
+               echo "this been triggered on ResourceTrigger(merge)"
+               echo $(triggerReason)
                
 
 
