@@ -20,7 +20,7 @@ variables:
    - name: test
      value: "test__01"  
    - name: test_02
-     value: eq(variables.triggerReason, 'Manual')
+     value: eq($(Build.Reason), 'Manual')
 
 stages:
   - stage: what_is_the_trigger
