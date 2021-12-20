@@ -71,8 +71,8 @@ stages:
 
 
 
-      - job:
-        pool:
+    - job:
+      pool:
           name: Azure Pipelines
           vmImage: ubuntu-latest
           steps:
