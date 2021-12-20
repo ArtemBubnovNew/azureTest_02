@@ -17,6 +17,8 @@ pr:
 variables:
    - name: triggerReason
      value: $(Build.Reason)
+   - name: test
+     value: "test"  
 
 stages:
   - stage: what_is_the_trigger
@@ -29,7 +31,7 @@ stages:
         steps:
           - script: 
               echo $(triggerReason)
-              echo eq(variables.triggerReason, 'IndividualCI')
+              echo $(value)
 
   - stage: Build_merge
     displayName: "Build on merge"
