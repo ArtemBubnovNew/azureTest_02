@@ -70,25 +70,25 @@ stages:
               customCommand: install sfdx-cli --global
              
           - bash: 
-              touch access.key
-            displayName: "Temp file for auth url file creation  __ org 2"
+              touch access_qa.key
+            displayName: "Temp file for auth url file creation  __ qa org"
 
           - bash:    
-              echo $SF_URL_Dev > access_dev.key
+              echo $SF_URL_Qa > access_qa.key
             env:
-              SF_URL_Dev: $(SalesforceOrgAuthUrl)
-            displayName: "Write url to the temp file  __ org 1"
+              SF_URL_Qa: $(SalesforceOrgAuthUrl_02)
+            displayName: "Write url to the temp file  __ qa org"
 
           - bash: 
-              sfdx force:auth:sfdxurl:store -f "access_dev.key" -a salesforce_dev.org
-            displayName: "Connect to the Salesforce  __ org 1"
+              sfdx force:auth:sfdxurl:store -f "access_qa.key" -a access_qa.org
+            displayName: "Connect to the Salesforce  __ qa org"
 
           - bash: 
-              sfdx force:org:display -u salesforce_dev.org
-            displayName: "Salesforce org connection doublecheck  __ org 1"
+              sfdx force:org:display -u access_qa.org
+            displayName: "Salesforce org connection doublecheck  __ qa org"
 
           - bash:
-              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce_dev.org -c
+              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u access_qa.org -c
             displayName: "Salesforce test without deploy"
 
 ##------------------------------------------------------------------------------------------------------------------------------
@@ -101,12 +101,6 @@ stages:
           vmImage: ubuntu-latest
 
         steps:
-          - bash:
-             echo $(System.DefaultWorkingDirectory)
-             ls
-            displayName: "REG end"
-
-
           # - task: UseNode@1
           - task: Npm@1
             inputs:
@@ -114,26 +108,26 @@ stages:
               customCommand: install sfdx-cli --global
              
           - bash: 
-              touch access.key
-            displayName: "Temp file for auth url file creation  __ org 1"
+              touch access_prod.key
+            displayName: "Temp file for auth url file creation  __ prod org"
 
           - bash:    
-              echo $SF_URL > access.key
+              echo $SF_URL_Prod > access_prod.key.key
             env:
-              SF_URL: $(SalesforceOrgAuthUrl)
-            displayName: "Write url to the temp file  __ org 1"
+              SF_URL_Prod: $(SalesforceOrgAuthUrl_03)
+            displayName: "Write url to the temp file  __ prod org"
 
 
           - bash: 
-              sfdx force:auth:sfdxurl:store -f "access.key" -a salesforce.org
-            displayName: "Connect to the Salesforce  __ org 1"
+              sfdx force:auth:sfdxurl:store -f "access_prod.key" -a salesforce prod.org
+            displayName: "Connect to the Salesforce  __ prod org"
 
           - bash: 
-              sfdx force:org:display -u salesforce.org
-            displayName: "Salesforce org connection doublecheck  __ org 1"
+              sfdx force:org:display -u salesforce prod.org
+            displayName: "Salesforce org connection doublecheck  __ prod org"
 
           - bash:
-              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce.org
+              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce prod.org
             displayName: "Salesforce test without deploy"
 
 
