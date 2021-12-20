@@ -97,7 +97,7 @@ stages:
             displayName: "Salesforce org connection doublecheck  __ org 1"
 
           - bash:
-              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce_dev.org
+              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce_dev.org -c
             displayName: "Salesforce test without deploy"
 
 ##------------------------------------------------------------------------------------------------------------------------------
