@@ -125,7 +125,7 @@ stages:
             instructions: 'Please validate the build configuration and resume'
             onTimeout: 'resume'
 # ##------------------------------------------------------------------------------------------------------------------------------            
-  - stage: Build_on_merge
+  - stage: QA_on_merge
     displayName: "QA Org Update"
     condition: and(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
     jobs:
