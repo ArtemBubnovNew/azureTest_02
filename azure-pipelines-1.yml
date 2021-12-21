@@ -19,7 +19,7 @@ stages:
   - stage: Build_merge
     displayName: "Build on merge"
     # condition: eq(variables['Build.Reason'], 'IndividualCI')
-    condition: and(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['SourceBranch'], 'refs/heads/master'))
+    condition: and(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     jobs:
       - job:
         pool:
