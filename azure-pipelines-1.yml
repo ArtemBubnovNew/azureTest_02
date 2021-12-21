@@ -27,6 +27,8 @@ stages:
 
         steps:
           # - task: UseNode@1
+          - script: 
+              echo variables['Build.SourceBranch']
           - task: Npm@1
             inputs:
               command: custom
