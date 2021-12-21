@@ -1,134 +1,354 @@
-# trigger:
-#   branches:
-#       include:
-#       - '*'
-#   paths:
-#      include:
-#      - force-app/*
+trigger:
+  branches:
+      include:
+      - '*'
+  paths:
+     include:
+     - force-app/*
 
-# pr:
-#   branches:
-#       include:
-#       - '*'
-#   paths:
-#      include:
-#      - force-app
+pr:
+  branches:
+      include:
+      - '*'
+  paths:
+     include:
+     - force-app
 
-# stages:
-#   - stage: develop
-#     displayName: "develop"
-#     jobs:
-#       - job:
-#         pool:
-#           name: Azure Pipelines
-#           vmImage: ubuntu-latest
+stages:
 
-#         steps:
-#           # - task: UseNode@1
-#           - task: Npm@1
-#             inputs:
-#               command: custom
-#               customCommand: install sfdx-cli --global
+  - stage: Build_merge
+    displayName: "Build on merge"
+    condition: eq(variables['Build.Reason'], 'IndividualCI')
+    jobs:
+      - job:
+        pool:
+          name: Azure Pipelines
+          vmImage: ubuntu-latest
+
+        steps:
+          # - task: UseNode@1
+          - task: Npm@1
+            inputs:
+              command: custom
+              customCommand: install sfdx-cli --global
              
-#           - bash: 
-#               touch access_dev.key
-#             displayName: "Temp file for auth url file creation  __ dev org "
+          - bash: 
+              touch access_dev.key
+            displayName: "Temp file for auth url file creation  __ dev org "
 
-#           - bash:    
-#               echo $SF_URL_dev > access_dev.key
-#             env:
-#               SF_URL_dev: $(SalesforceOrgAuthUrl)
-#             displayName: "Write url to the temp file  __ dev org"
+          - bash:    
+              echo $SF_URL_dev > access_dev.key
+            env:
+              SF_URL_dev: $(SalesforceOrgAuthUrl)
+            displayName: "Write url to the temp file  __ dev org"
 
 
-#           - bash: 
-#               sfdx force:auth:sfdxurl:store -f "access_dev.key" -a salesforce_dev.org
-#             displayName: "Connect to the Salesforce  __ dev org"
+          - bash: 
+              sfdx force:auth:sfdxurl:store -f "access_dev.key" -a salesforce_dev.org
+            displayName: "Connect to the Salesforce  __ dev org"
 
-#           - bash: 
-#               sfdx force:org:display -u salesforce_dev.org
-#             displayName: "Salesforce org connection doublecheck  __ dev org"
+          - bash: 
+              sfdx force:org:display -u salesforce_dev.org
+            displayName: "Salesforce org connection doublecheck  __ dev org"
 
-#           - bash:
-#               sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce_dev.org -c
-#             displayName: "Salesforce test without deploy"
+          - bash:
+              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce_dev.org
+            displayName: "Salesforce test without deploy"
 
 # ##------------------------------------------------------------------------------------------------------------------------------            
-#   - stage: qa
-#     displayName: "QA ENV"
-#     jobs:
-#       - job:
-#         pool:
-#           name: Azure Pipelines
-#           vmImage: ubuntu-latest
+  - stage: QA_merge
+    displayName: "QA on merge"
+    condition: eq(variables['Build.Reason'], 'IndividualCI')
+    jobs:
 
-#         steps:
-#           # - task: UseNode@1
-#           - task: Npm@1
-#             inputs:
-#               command: custom
-#               customCommand: install sfdx-cli --global
+      - job: send_email
+        displayName: "Send an approval request notification email for Users"
+        pool:
+            name: Azure Pipelines
+            vmImage: windows-latest
+        steps:
+        - task: SendEmail@1
+          displayName: 'Send an email with subject test subject'
+          inputs:
+            To: 'artem.bubnov@vrpconsulting.com'
+            From: 'artem.bubnov@vrpconsulting.com'
+            Subject: 'test subject'
+            Body: 'test Mail Body'
+            SmtpServer: smtp.gmail.com
+            SmtpPort: 465
+            SmtpUsername: 'artem.bubnov@vrpconsulting.com'
+            SmtpPassword: '5aK~7R({6wK=s~+9'
+
+
+
+
+
+
+
+
+      - job: waitForValidation
+        displayName: Wait for external validation
+        pool: server
+        timeoutInMinutes: 4320 # job times out in 3 days
+        steps:
+        - task: ManualValidation@0
+          timeoutInMinutes: 1440 # task times out in 1 day
+          inputs:
+            notifyUsers: |
+                salesforcecopadouat1@mail.ru
+            instructions: 'Please validate the build configuration and resume'
+            onTimeout: 'resume'
+
+      - job:
+        pool:
+          name: Azure Pipelines
+          vmImage: ubuntu-latest
+
+        steps:
+          # - task: UseNode@1
+          - task: Npm@1
+            inputs:
+              command: custom
+              customCommand: install sfdx-cli --global
              
-#           - bash: 
-#               touch access_qa.key
-#             displayName: "Temp file for auth url file creation  __ qa org"
+          - bash: 
+              touch access_qa.key
+            displayName: "Temp file for auth url file creation  __ qa org"
 
-#           - bash:    
-#               echo $SF_URL_Qa > access_qa.key
-#             env:
-#               SF_URL_Qa: $(SalesforceOrgAuthUrl_02)
-#             displayName: "Write url to the temp file  __ qa org"
+          - bash:    
+              echo $SF_URL_Qa > access_qa.key
+            env:
+              SF_URL_Qa: $(SalesforceOrgAuthUrl_02)
+            displayName: "Write url to the temp file  __ qa org"
 
-#           - bash: 
-#               sfdx force:auth:sfdxurl:store -f "access_qa.key" -a access_qa.org
-#             displayName: "Connect to the Salesforce  __ qa org"
+          - bash: 
+              sfdx force:auth:sfdxurl:store -f "access_qa.key" -a access_qa.org
+            displayName: "Connect to the Salesforce  __ qa org"
 
-#           - bash: 
-#               sfdx force:org:display -u access_qa.org
-#             displayName: "Salesforce org connection doublecheck  __ qa org"
+          - bash: 
+              sfdx force:org:display -u access_qa.org
+            displayName: "Salesforce org connection doublecheck  __ qa org"
 
-#           - bash:
-#               sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u access_qa.org -c
-#             displayName: "Salesforce test without deploy"
+          - bash:
+              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u access_qa.org
+            displayName: "Salesforce test without deploy"
 
 # ##------------------------------------------------------------------------------------------------------------------------------
-#   - stage: prod
-#     displayName: "Production ENV"
-#     jobs:
-#       - job:
-#         pool:
-#           name: Azure Pipelines
-#           vmImage: ubuntu-latest
+  - stage: PROD_merge
+    displayName: "Production on merge"
+    condition: eq(variables['Build.Reason'], 'IndividualCI')
+    jobs:
+      - job: waitForValidation
+        displayName: Wait for external validation
+        pool: server
+        timeoutInMinutes: 4320 # job times out in 3 days
+        steps:
+        - task: ManualValidation@0
+          timeoutInMinutes: 1440 # task times out in 1 day
+          inputs:
+            notifyUsers: |
+                salesforcecopadouat1@mail.ru
+            instructions: 'Please validate the build configuration and resume'
+            onTimeout: 'resume'
+      - job:
+        pool:
+          name: Azure Pipelines
+          vmImage: ubuntu-latest
 
-#         steps:
-#           # - task: UseNode@1
-#           - task: Npm@1
-#             inputs:
-#               command: custom
-#               customCommand: install sfdx-cli --global
+        steps:
+          # - task: UseNode@1
+          - task: Npm@1
+            inputs:
+              command: custom
+              customCommand: install sfdx-cli --global
              
-#           - bash: 
-#               touch access_prod.key
-#             displayName: "Temp file for auth url file creation  __ prod org"
+          - bash: 
+              touch access_prod.key
+            displayName: "Temp file for auth url file creation  __ prod org"
 
-#           - bash:    
-#               echo $SF_URL_Prod > access_prod.key
-#             env:
-#               SF_URL_Prod: $(SalesforceOrgAuthUrl_03)
-#             displayName: "Write url to the temp file  __ prod org"
+          - bash:    
+              echo $SF_URL_Prod > access_prod.key
+            env:
+              SF_URL_Prod: $(SalesforceOrgAuthUrl_03)
+            displayName: "Write url to the temp file  __ prod org"
 
 
-#           - bash: 
-#               sfdx force:auth:sfdxurl:store -f "access_prod.key" -a salesforceProd.org
-#             displayName: "Connect to the Salesforce  __ prod org"
+          - bash: 
+              sfdx force:auth:sfdxurl:store -f "access_prod.key" -a salesforceProd.org
+            displayName: "Connect to the Salesforce  __ prod org"
 
-#           - bash: 
-#               sfdx force:org:display -u salesforceProd.org
-#             displayName: "Salesforce org connection doublecheck  __ prod org"
+          - bash: 
+              sfdx force:org:display -u salesforceProd.org
+            displayName: "Salesforce org connection doublecheck  __ prod org"
 
-#           - bash:
-#               sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforceProd.org
-#             displayName: "Salesforce test without deploy"
+          - bash:
+              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforceProd.org
+            displayName: "Salesforce test without deploy"
+
+
+
+
+# ##------------------------------------------------------------------------------------------------------------------------------       
+# ##------------------------------------------------------------------------------------------------------------------------------       
+# ##------------------------------------------------------------------------------------------------------------------------------       
+
+
+  - stage: Build_PR
+    displayName: "Build on PR"
+    condition: eq(variables['Build.Reason'], 'PullRequest')
+    jobs:
+      - job:
+        pool:
+          name: Azure Pipelines
+          vmImage: ubuntu-latest
+
+        steps:
+          # - task: UseNode@1
+          - task: Npm@1
+            inputs:
+              command: custom
+              customCommand: install sfdx-cli --global
+             
+          - bash: 
+              touch access_dev.key
+            displayName: "Temp file for auth url file creation  __ dev org "
+
+          - bash:    
+              echo $SF_URL_dev > access_dev.key
+            env:
+              SF_URL_dev: $(SalesforceOrgAuthUrl)
+            displayName: "Write url to the temp file  __ dev org"
+
+
+          - bash: 
+              sfdx force:auth:sfdxurl:store -f "access_dev.key" -a salesforce_dev.org
+            displayName: "Connect to the Salesforce  __ dev org"
+
+          - bash: 
+              sfdx force:org:display -u salesforce_dev.org
+            displayName: "Salesforce org connection doublecheck  __ dev org"
+
+          - bash:
+              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce_dev.org -c
+            displayName: "Salesforce test without deploy"
+
+# ##------------------------------------------------------------------------------------------------------------------------------            
+  - stage: QA_PR
+    displayName: "QA on PR"
+    condition: eq(variables['Build.Reason'], 'PullRequest')
+    jobs:
+      - job: waitForValidation
+        displayName: Wait for external validation
+        pool: server
+        timeoutInMinutes: 4320 # job times out in 3 days
+        steps:
+        - task: ManualValidation@0
+          timeoutInMinutes: 1440 # task times out in 1 day
+          inputs:
+            notifyUsers: |
+                salesforcecopadouat1@mail.ru
+            instructions: 'Please validate the build configuration and resume'
+            onTimeout: 'resume'
+
+      - job:
+        pool:
+          name: Azure Pipelines
+          vmImage: ubuntu-latest
+
+        steps:
+          # - task: UseNode@1
+          - task: Npm@1
+            inputs:
+              command: custom
+              customCommand: install sfdx-cli --global
+             
+          - bash: 
+              touch access_qa.key
+            displayName: "Temp file for auth url file creation  __ qa org"
+
+          - bash:    
+              echo $SF_URL_Qa > access_qa.key
+            env:
+              SF_URL_Qa: $(SalesforceOrgAuthUrl_02)
+            displayName: "Write url to the temp file  __ qa org"
+
+          - bash: 
+              sfdx force:auth:sfdxurl:store -f "access_qa.key" -a access_qa.org
+            displayName: "Connect to the Salesforce  __ qa org"
+
+          - bash: 
+              sfdx force:org:display -u access_qa.org
+            displayName: "Salesforce org connection doublecheck  __ qa org"
+
+          - bash:
+              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u access_qa.org -c
+            displayName: "Salesforce test without deploy"
+
+# ##------------------------------------------------------------------------------------------------------------------------------
+  - stage: PROD_PR
+    displayName: "Production on PR"
+    condition: eq(variables['Build.Reason'], 'PullRequest')
+    jobs:
+      - job: waitForValidation
+        displayName: Wait for external validation
+        pool: server
+        timeoutInMinutes: 4320 # job times out in 3 days
+        steps:
+        - task: ManualValidation@0
+          timeoutInMinutes: 1440 # task times out in 1 day
+          inputs:
+            notifyUsers: |
+                salesforcecopadouat1@mail.ru
+            instructions: 'Please validate the build configuration and resume'
+            onTimeout: 'resume'
+      - job:
+        pool:
+          name: Azure Pipelines
+          vmImage: ubuntu-latest
+
+        steps:
+          # - task: UseNode@1
+          - task: Npm@1
+            inputs:
+              command: custom
+              customCommand: install sfdx-cli --global
+             
+          - bash: 
+              touch access_prod.key
+            displayName: "Temp file for auth url file creation  __ prod org"
+
+          - bash:    
+              echo $SF_URL_Prod > access_prod.key
+            env:
+              SF_URL_Prod: $(SalesforceOrgAuthUrl_03)
+            displayName: "Write url to the temp file  __ prod org"
+
+
+          - bash: 
+              sfdx force:auth:sfdxurl:store -f "access_prod.key" -a salesforceProd.org
+            displayName: "Connect to the Salesforce  __ prod org"
+
+          - bash: 
+              sfdx force:org:display -u salesforceProd.org
+            displayName: "Salesforce org connection doublecheck  __ prod org"
+
+          - bash:
+              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforceProd.org -c
+            displayName: "Salesforce test without deploy"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
