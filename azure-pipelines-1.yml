@@ -60,32 +60,6 @@ stages:
     displayName: "QA on merge"
     condition: eq(variables['Build.Reason'], 'IndividualCI')
     jobs:
-
-      - job: send_email
-        displayName: "Send an approval request notification email for Users"
-        pool:
-            name: Azure Pipelines
-            vmImage: windows-latest
-        steps:
-        - task: SendEmail@1
-          displayName: 'Send an email with subject test subject'
-          inputs:
-            To: 'artem.bubnov@vrpconsulting.com'
-            From: 'artem.bubnov@vrpconsulting.com'
-            Subject: 'test subject'
-            Body: 'test Mail Body'
-            SmtpServer: smtp.gmail.com
-            SmtpPort: 465
-            SmtpUsername: 'artem.bubnov@vrpconsulting.com'
-            SmtpPassword: '5aK~7R({6wK=s~+9'
-
-
-
-
-
-
-
-
       - job: waitForValidation
         displayName: Wait for external validation
         pool: server
