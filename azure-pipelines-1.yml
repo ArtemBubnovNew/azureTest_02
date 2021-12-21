@@ -12,13 +12,14 @@ pr:
       - '*'
   paths:
      include:
-     - force-app
+     - force-app/*
 
 stages:
-
+# and(succeeded(), eq(variables.isMain, 'true'))
   - stage: Build_merge
     displayName: "Build on merge"
-    condition: eq(variables['Build.Reason'], 'IndividualCI')
+    # condition: eq(variables['Build.Reason'], 'IndividualCI')
+    condition: and(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['SourceBranch'], 'refs/heads/master'))
     jobs:
       - job:
         pool:
@@ -57,6 +58,11 @@ stages:
               sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce_dev.org
             displayName: "Salesforce test without deploy"
 
+# ##------------------------------------------------------------------------------------------------------------------------------            
+  - stage: QA_merge
+    displayName: "QA on merge"
+    condition: eq(variables['Build.Reason'], 'IndividualCI')
+    jobs:
       - job: waitForValidation
         displayName: Wait for external validation
         pool: server
@@ -69,11 +75,7 @@ stages:
                 salesforcecopadouat1@mail.ru
             instructions: 'Please validate the build configuration and resume'
             onTimeout: 'resume'
-# ##------------------------------------------------------------------------------------------------------------------------------            
-  - stage: QA_merge
-    displayName: "QA on merge"
-    condition: eq(variables['Build.Reason'], 'IndividualCI')
-    jobs:
+
       - job:
         pool:
           name: Azure Pipelines
@@ -107,7 +109,12 @@ stages:
           - bash:
               sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u access_qa.org
             displayName: "Salesforce test without deploy"
-      
+
+# ##------------------------------------------------------------------------------------------------------------------------------
+  - stage: PROD_merge
+    displayName: "Production on merge"
+    condition: eq(variables['Build.Reason'], 'IndividualCI')
+    jobs:
       - job: waitForValidation
         displayName: Wait for external validation
         pool: server
@@ -119,14 +126,7 @@ stages:
             notifyUsers: |
                 salesforcecopadouat1@mail.ru
             instructions: 'Please validate the build configuration and resume'
-            onTimeout: 'resume'            
-
-# ##------------------------------------------------------------------------------------------------------------------------------
-  - stage: PROD_merge
-    displayName: "Production on merge"
-    condition: eq(variables['Build.Reason'], 'IndividualCI')
-    jobs:
-
+            onTimeout: 'resume'
       - job:
         pool:
           name: Azure Pipelines
