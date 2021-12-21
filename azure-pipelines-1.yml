@@ -110,9 +110,9 @@ stages:
 
           - bash:
               sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce_dev.org
-            displayName: "Salesforce test without deploy"
+            displayName: "Salesforce deploy"
 
-      - job: waitForValidation
+      - job: wait_For_Validation
         displayName: Wait for external validation
         pool: server
         timeoutInMinutes: 4320 # job times out in 3 days
@@ -161,7 +161,7 @@ stages:
 
           - bash:
               sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u access_qa.org
-            displayName: "Salesforce test without deploy"
+            displayName: "Salesforce deploy"
 
 # ##----------------------------------------------TBD TBD TBD TBD--------------------------------------------------------------------------------
   # - stage: PROD_merge
@@ -259,7 +259,7 @@ stages:
 
           - bash:
               sfdx force:source:deploy -p force-app -l RunLocalTestsInOrg -w 60 -u access_qa.org --checkonly
-            displayName: "Salesforce test without deploy"
+            displayName: "Salesforce test with deploy"
 
 
 
