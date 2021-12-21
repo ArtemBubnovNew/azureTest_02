@@ -69,11 +69,11 @@ stages:
 
 
 
-# and(succeeded(), eq(variables.isMain, 'true'))
-  - stage: Build_merge
-    displayName: "Build on merge"
-    # condition: eq(variables['Build.Reason'], 'IndividualCI')
-    condition: and(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+
+  - stage: Build_on_merge
+    displayName: "Build Org Update"
+
+    condition: and(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
     jobs:
       - job:
         pool:
@@ -112,11 +112,6 @@ stages:
               sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforce_dev.org
             displayName: "Salesforce test without deploy"
 
-# ##------------------------------------------------------------------------------------------------------------------------------            
-  - stage: QA_merge
-    displayName: "QA on merge"
-    condition: eq(variables['Build.Reason'], 'IndividualCI')
-    jobs:
       - job: waitForValidation
         displayName: Wait for external validation
         pool: server
@@ -129,7 +124,11 @@ stages:
                 salesforcecopadouat1@mail.ru
             instructions: 'Please validate the build configuration and resume'
             onTimeout: 'resume'
-
+# ##------------------------------------------------------------------------------------------------------------------------------            
+  - stage: Build_on_merge
+    displayName: "QA Org Update"
+    condition: and(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
+    jobs:
       - job:
         pool:
           name: Azure Pipelines
@@ -164,23 +163,70 @@ stages:
               sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u access_qa.org
             displayName: "Salesforce test without deploy"
 
-# ##------------------------------------------------------------------------------------------------------------------------------
-  - stage: PROD_merge
-    displayName: "Production on merge"
-    condition: eq(variables['Build.Reason'], 'IndividualCI')
+# ##----------------------------------------------TBD TBD TBD TBD--------------------------------------------------------------------------------
+  # - stage: PROD_merge
+  #   displayName: "Production on merge"
+  #   condition: and(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
+  #   jobs:
+  #     - job: waitForValidation
+  #       displayName: Wait for external validation
+  #       pool: server
+  #       timeoutInMinutes: 4320 # job times out in 3 days
+  #       steps:
+  #       - task: ManualValidation@0
+  #         timeoutInMinutes: 1440 # task times out in 1 day
+  #         inputs:
+  #           notifyUsers: |
+  #               salesforcecopadouat1@mail.ru
+  #           instructions: 'Please validate the build configuration and resume'
+  #           onTimeout: 'resume'
+  #     - job:
+  #       pool:
+  #         name: Azure Pipelines
+  #         vmImage: ubuntu-latest
+
+  #       steps:
+  #         # - task: UseNode@1
+  #         - task: Npm@1
+  #           inputs:
+  #             command: custom
+  #             customCommand: install sfdx-cli --global
+             
+  #         - bash: 
+  #             touch access_prod.key
+  #           displayName: "Temp file for auth url file creation  __ prod org"
+
+  #         - bash:    
+  #             echo $SF_URL_Prod > access_prod.key
+  #           env:
+  #             SF_URL_Prod: $(SalesforceOrgAuthUrl_03)
+  #           displayName: "Write url to the temp file  __ prod org"
+
+
+  #         - bash: 
+  #             sfdx force:auth:sfdxurl:store -f "access_prod.key" -a salesforceProd.org
+  #           displayName: "Connect to the Salesforce  __ prod org"
+
+  #         - bash: 
+  #             sfdx force:org:display -u salesforceProd.org
+  #           displayName: "Salesforce org connection doublecheck  __ prod org"
+
+  #         - bash:
+  #             sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforceProd.org
+  #           displayName: "Salesforce test without deploy"
+
+
+
+
+# ##------------------------------------------------------------------------------------------------------------------------------       
+# ##------------------------------------------------------------------------------------------------------------------------------       
+# ##------------------------------------------------------------------------------------------------------------------------------       
+
+
+  - stage: Production_on_merge
+    displayName: "Production Org Update"
+    condition: and(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     jobs:
-      - job: waitForValidation
-        displayName: Wait for external validation
-        pool: server
-        timeoutInMinutes: 4320 # job times out in 3 days
-        steps:
-        - task: ManualValidation@0
-          timeoutInMinutes: 1440 # task times out in 1 day
-          inputs:
-            notifyUsers: |
-                salesforcecopadouat1@mail.ru
-            instructions: 'Please validate the build configuration and resume'
-            onTimeout: 'resume'
       - job:
         pool:
           name: Azure Pipelines
@@ -194,34 +240,30 @@ stages:
               customCommand: install sfdx-cli --global
              
           - bash: 
-              touch access_prod.key
-            displayName: "Temp file for auth url file creation  __ prod org"
+              touch access_qa.key
+            displayName: "Temp file for auth url file creation  __ qa org"
 
           - bash:    
-              echo $SF_URL_Prod > access_prod.key
+              echo $SF_URL_Qa > access_qa.key
             env:
-              SF_URL_Prod: $(SalesforceOrgAuthUrl_03)
-            displayName: "Write url to the temp file  __ prod org"
-
-
-          - bash: 
-              sfdx force:auth:sfdxurl:store -f "access_prod.key" -a salesforceProd.org
-            displayName: "Connect to the Salesforce  __ prod org"
+              SF_URL_Qa: $(SalesforceOrgAuthUrl_02)
+            displayName: "Write url to the temp file  __ qa org"
 
           - bash: 
-              sfdx force:org:display -u salesforceProd.org
-            displayName: "Salesforce org connection doublecheck  __ prod org"
+              sfdx force:auth:sfdxurl:store -f "access_qa.key" -a access_qa.org
+            displayName: "Connect to the Salesforce  __ qa org"
+
+          - bash: 
+              sfdx force:org:display -u access_qa.org
+            displayName: "Salesforce org connection doublecheck  __ qa org"
 
           - bash:
-              sfdx force:source:deploy -p force-app -l RunLocalTests -w 60 -u salesforceProd.org
+              sfdx force:source:deploy -p force-app -l RunLocalTestsInOrg -w 60 -u access_qa.org --checkonly
             displayName: "Salesforce test without deploy"
 
 
 
 
-# ##------------------------------------------------------------------------------------------------------------------------------       
-# ##------------------------------------------------------------------------------------------------------------------------------       
-# ##------------------------------------------------------------------------------------------------------------------------------       
 
 
 
@@ -231,14 +273,7 @@ stages:
 
 
 
-
-
-
-
-
-
-
-
+    # condition: eq(variables['Build.Reason'], 'IndividualCI')
             
 #   - stage: QA_PR
 #     displayName: "QA on PR"
