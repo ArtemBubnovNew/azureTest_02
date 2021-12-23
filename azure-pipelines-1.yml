@@ -1,10 +1,10 @@
-trigger:
-  branches:
-      include:
-      - '*'
-  paths:
-     include:
-     - force-app/*
+# trigger:
+#   branches:
+#       include:
+#       - '*'
+#   paths:
+#      include:
+#      - force-app/*
 
 pr:
   branches:
