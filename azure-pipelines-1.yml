@@ -21,6 +21,17 @@ stages:
     # condition: eq(variables['Build.Reason'], 'PullRequest')
     condition: and(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
     jobs:
+      - job: 
+        steps:
+        - script: |
+            echo "pr test-----"
+            echo $(Build.SourceBranch)
+
+
+
+
+
+
       - job:
         pool:
           name: Azure Pipelines
