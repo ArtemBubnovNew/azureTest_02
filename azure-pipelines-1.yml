@@ -22,10 +22,10 @@ stages:
         steps:
         - script: |
             echo "pr test-----"
-            echo $(Build.SourceBranch)
-            echo $(pullRequestId)
-            echo $(System.PullRequest.PullRequestId)
-            echo $(System.PullRequest.PullRequestNumber)
+            echo Build.SourceBranch --- $(Build.SourceBranch)
+            echo pullRequestId --- $(pullRequestId)
+            echo System.PullRequest.PullRequestId --- $(System.PullRequest.PullRequestId)
+            echo System.PullRequest.PullRequestNumber --- $(System.PullRequest.PullRequestNumber)
 
   - stage: Build_PR
     displayName: "Code Validation"
