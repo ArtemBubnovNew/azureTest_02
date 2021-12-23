@@ -24,7 +24,7 @@ stages:
             echo "pr test-----"
             echo $(Build.SourceBranch)
             echo $(pullRequestId)
-            echo $(BUILD.PullRequest.ID)
+            echo $(System.PullRequest.PullRequestId)
 
   - stage: Build_PR
     displayName: "Code Validation"
