@@ -15,12 +15,22 @@ pr:
      - force-app/*
 
 stages:
+  - stage: tester_stage
+    displayName: "Test and logers"
+    jobs:
+      - job: 
+        steps:
+        - script: |
+            echo "pr test-----"
+            echo $(Build.SourceBranch)
+            echo $(pullRequestId)
 
   - stage: Build_PR
     displayName: "Code Validation"
     # condition: eq(variables['Build.Reason'], 'PullRequest')
     condition: and(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
     jobs:
+ 
       - job:
         pool:
           name: Azure Pipelines
