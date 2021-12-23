@@ -21,7 +21,8 @@ public with sharing class DemoController {
     }
 
     /**
-     * Get the version of the SFDX demo app 11111111212121212121212
+
+     * Get the version of the SFDX demo app 111111112121212121212122121
 
      */
     public String getAppVersion() {
