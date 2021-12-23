@@ -27,13 +27,13 @@ stages:
             # # echo System.PullRequest.PullRequestId --- $(System.PullRequest.PullRequestId)
             # echo System.PullRequest.PullRequestNumber --- $(System.PullRequest.PullRequestNumber)
             echo variables['System.PullRequest.PullRequestNumber']
-            
+
 
 
   - stage: Build_PR
     displayName: "Code Validation"
     # condition: eq(variables['Build.Reason'], 'PullRequest')  
-    condition: and(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/pull/$(System.PullRequest.PullRequestNumber)/develop'))
+    condition: and(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
     jobs:
  
       - job:
